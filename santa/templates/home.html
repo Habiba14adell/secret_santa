@@ -1,0 +1,14 @@
+﻿{% extends "base.html" %}
+{% block nav %}<a href="{{ url_for('pages.admin') }}">Organizer dashboard</a>{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">The holiday gift exchange</p>
+    <h1>Secret Santa</h1>
+    <p>Bring your group together, draw names, and keep the biggest surprise under wraps.</p>
+    <a class="button" href="{{ url_for('pages.admin') }}">Organize an exchange</a>
+    <p class="small">Joining an exchange? Open the invitation link from your organizer.</p>
+  </div>
+  <div class="art" aria-hidden="true"><span class="star one">✧</span><span class="star two">✦</span><span class="star three">✧</span><div class="gift"><div class="bow"></div><div class="lid"></div><div class="box"></div></div></div>
+</section>
+{% endblock %}

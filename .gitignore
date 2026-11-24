@@ -1,0 +1,15 @@
+.venv/
+.uv-cache/
+.uv-python/
+__pycache__/
+instance/
+*.sqlite3*
+*.sqlite
+*.sqlite-journal
+*.db
+*.db-wal
+*.db-shm
+*.xlsx
+.env
+.env.*
+!.env.example

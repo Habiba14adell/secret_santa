@@ -1,0 +1,29 @@
+﻿{% extends "admin_base.html" %}
+{% block title %}Organizer dashboard{% endblock %}
+{% block content %}
+<header class="banner"><p class="eyebrow">Organizer dashboard</p><h1>Your exchanges</h1></header>
+<div class="grid">
+  <section class="card">
+    <h2>Create an exchange</h2>
+    {% if error %}<p class="notice error" role="alert">{{ error }}</p>{% endif %}
+    <form class="stack" method="post">
+      <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+      <label for="title">Event name</label>
+      <input id="title" name="title" value="{{ request.form.get('title', '') }}" maxlength="100" placeholder="Christmas with friends" required>
+      <label for="names">Participant names</label>
+      <textarea id="names" name="names" rows="6" placeholder="One name per line" required>{{ request.form.get('names', '') }}</textarea>
+      <button>Create event</button>
+    </form>
+  </section>
+  <section class="card">
+    <h2>Events</h2>
+    {% if events %}
+    <ul class="events">
+      {% for event in events %}
+      <li><a href="{{ url_for('pages.dashboard', slug=event.slug) }}">{{ event.title }}</a><span class="pill {{ 'positive' if event.generated_at }}">{{ 'Draw complete' if event.generated_at else 'Accepting guests' }}</span></li>
+      {% endfor %}
+    </ul>
+    {% else %}<p class="muted">Your first exchange will appear here.</p>{% endif %}
+  </section>
+</div>
+{% endblock %}

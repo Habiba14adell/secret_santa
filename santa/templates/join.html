@@ -1,0 +1,57 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ event.title }}{% endblock %}
+{% block main_class %}shell content narrow{% endblock %}
+{% block content %}
+<header class="banner celebration"><div class="seal" aria-hidden="true">✦</div><p class="eyebrow">Secret Santa exchange</p><h1>{{ event.title }}</h1></header>
+<section class="card section">
+  {% if error %}<p class="notice error" role="alert">{{ error }}</p>{% endif %}
+  {% if person %}
+    <form method="post" id="restore" hidden>
+      <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+      <input type="hidden" name="action" value="restore">
+      <input type="hidden" name="token">
+    </form>
+    <p class="eyebrow">You're on the list</p>
+    <h2>Hi, {{ person.name }}!</h2>
+    {% if recipient %}
+      <div class="recipient"><p>You’re giving a gift to</p><strong>{{ recipient }}</strong></div>
+      <p>Keep their name a surprise until the exchange.</p>
+    {% elif event.generated_at %}
+      <p>Your Secret Santa assignment is ready.</p>
+      <form method="post">
+        <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+        <button name="action" value="reveal">Reveal my recipient</button>
+      </form>
+    {% else %}
+      <p>Once your organizer draws names, return here to reveal your recipient.</p>
+      <a class="button secondary" href="{{ url_for('pages.join', slug=event.slug) }}">Check for updates</a>
+    {% endif %}
+    <details {% if fresh %}open{% endif %}>
+      <summary>Save your private access</summary>
+      <p>Keep this link or code somewhere safe so you can return on another device. Anyone with it can see your assignment.</p>
+      <label for="private">Private access code</label>
+      <div class="input-row"><input id="private" value="{{ token }}" readonly autocomplete="off"><button type="button" data-copy="private" data-private-link>Copy private link</button></div>
+      <span class="small" role="status" data-copy-status></span>
+    </details>
+  {% else %}
+    <h2>Join the exchange</h2>
+    <p>Enter your name as it appears on the organizer’s list.</p>
+    <form method="post" class="stack">
+      <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+      <label for="name">Your name</label>
+      <input id="name" name="name" autocomplete="name" maxlength="100" required>
+      <button name="action" value="register">Join Secret Santa</button>
+    </form>
+    <details {% if request.form.get('action') == 'restore' %}open{% endif %}>
+      <summary>Already joined?</summary>
+      <form method="post" class="stack" id="restore">
+        <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="restore">
+        <label for="access-code">Private access code</label>
+        <input id="access-code" name="token" maxlength="43" autocomplete="off" required>
+        <button class="secondary">Open my assignment</button>
+      </form>
+    </details>
+  {% endif %}
+</section>
+{% endblock %}

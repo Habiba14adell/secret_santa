@@ -1,0 +1,15 @@
+﻿{% extends "base.html" %}
+{% block title %}Organizer sign-in{% endblock %}
+{% block main_class %}shell content narrow{% endblock %}
+{% block content %}
+<section class="card">
+  <p class="eyebrow">Organizer access</p><h1>Welcome back</h1>
+  {% if error %}<p class="notice error" role="alert">{{ error }}</p>{% endif %}
+  <form method="post" class="stack">
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+    <label for="password">Admin password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required maxlength="1024">
+    <button>Sign in</button>
+  </form>
+</section>
+{% endblock %}

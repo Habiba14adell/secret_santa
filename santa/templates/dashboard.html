@@ -1,0 +1,53 @@
+﻿{% extends "admin_base.html" %}
+{% block title %}{{ event.title }}{% endblock %}
+{% block content %}
+<header class="banner">
+  <div><p class="eyebrow">Exchange dashboard</p><h1>{{ event.title }}</h1></div>
+  <a class="button light" href="{{ url_for('pages.export', slug=event.slug) }}">Export Excel</a>
+</header>
+<div class="grid">
+  <section class="card">
+    <h2>Invite your group</h2>
+    <p>Share this link so everyone can join.</p>
+    <label for="invite">Invitation link</label>
+    <div class="input-row"><input id="invite" value="{{ invite }}" readonly><button type="button" data-copy="invite">Copy link</button></div>
+    <span class="small" role="status" data-copy-status></span>
+  </section>
+  <section class="card">
+    <h2>Participation</h2>
+    <label for="joined"><strong>{{ joined }} of {{ people|length }}</strong> joined</label>
+    <progress id="joined" value="{{ joined }}" max="{{ people|length }}"></progress>
+    {% if event.generated_at %}
+      <p class="small">Names drawn {{ date_label(event.generated_at) }}</p>
+    {% else %}
+    <form method="post" action="{{ url_for('pages.generate', slug=event.slug) }}">
+      <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+      <button {% if joined < people|length or joined < 2 %}disabled{% endif %}>Generate Assignments</button>
+      {% if joined < people|length %}<p class="small">Everyone must join before you can draw names.</p>{% endif %}
+    </form>
+    {% endif %}
+  </section>
+</div>
+<section class="card section">
+  <h2>Participants and assignments</h2>
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Participants and assignments">
+  <table>
+    <thead><tr><th>Participant</th><th>Registration</th><th>Assigned recipient</th><th>Registration date</th><th>Assignment status</th></tr></thead>
+    <tbody>{% for person in people %}
+      <tr><th scope="row">{{ person.name }}</th><td><span class="pill {{ 'positive' if person.registered_at }}">{{ person.status }}</span></td><td>{{ person.recipient or '—' }}</td><td>{{ date_label(person.registered_at) }}</td><td>{{ person.assignment_status }}</td></tr>
+    {% endfor %}</tbody>
+  </table>
+  </div>
+</section>
+<section class="card section">
+  <h2>Activity log</h2>
+  {% if logs %}
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Activity log"><table>
+    <thead><tr><th>Time</th><th>Participant</th><th>Activity</th><th>Status</th></tr></thead>
+    <tbody>{% for log in logs %}
+      <tr><td>{{ date_label(log.occurred_at) }}</td><td>{{ log.name or '—' }}</td><td>{{ log.action }}</td><td>{{ log.status }}</td></tr>
+    {% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="muted">Activity appears as guests join.</p>{% endif %}
+</section>
+{% endblock %}

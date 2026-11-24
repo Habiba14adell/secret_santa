@@ -1,0 +1,5 @@
+﻿{% extends "base.html" %}
+{% block main_class %}shell content narrow{% endblock %}
+{% block content %}
+<section class="card"><h1>Secret Santa</h1><p>{{ message }}</p><a class="button" href="{{ back or url_for('pages.home') }}">Go back</a></section>
+{% endblock %}

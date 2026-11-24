@@ -1,0 +1,22 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Secret Santa{% endblock %} · Merry Draw</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+<body>
+  <div class="snowfall" aria-hidden="true"></div>
+  <header class="top"><nav class="shell" aria-label="Main navigation">
+    <a class="brand" href="{{ url_for('pages.home') }}"><span class="brand-icon" aria-hidden="true">✦</span> Merry Draw</a>
+    {% block nav %}{% endblock %}
+  </nav></header>
+  <main class="{% block main_class %}shell content{% endblock %}">
+    {% for message in get_flashed_messages() %}<p class="notice" role="status">{{ message }}</p>{% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="shell footer"><span aria-hidden="true">❋</span> Merry Draw · Secret Santa</footer>
+</body>
+</html>
